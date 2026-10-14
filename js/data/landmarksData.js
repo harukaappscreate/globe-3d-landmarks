@@ -1,0 +1,353 @@
+/**
+ * World Major Landmarks Open Dataset (Bilingual EN / JA)
+ * Coordinates and structural metadata derived from Public Domain / Open GeoNames & OpenStreetMap data.
+ * 3D geometry is procedurally synthesized in LandmarkBuilder.js (100% copyright-free).
+ */
+
+export const LANDMARKS_DATA = [
+  {
+    id: 'tokyo-tower',
+    nameEn: 'Tokyo Tower & Minato Skyline',
+    nameJa: '東京タワー & 都心摩天楼',
+    cityEn: 'Minato, Tokyo',
+    cityJa: '東京・港区',
+    countryEn: 'Japan',
+    countryJa: '日本',
+    region: 'Asia',
+    lat: 35.6586,
+    lon: 139.7454,
+    heightMeters: 333,
+    urbanPopM: 37.4,
+    archType: 'tokyo_tower',
+    archLabel: 'Parabolic Steel Truss',
+    color: '#ff3b1f',
+    secondaryColor: '#ffffff',
+    skylineDensity: 28,
+    descriptionEn:
+      'A 333-meter self-supporting steel truss communications and observation tower painted in International Orange and white, rising amidst the 37.4-million Greater Tokyo metropolitan skyline.',
+    descriptionJa:
+      '高さ333mの自立式鉄塔。インターナショナルオレンジと白の7段塗装、4本脚の放物線トラス構造と2層の展望台、および世界最大規模の東京都市圏（約3,740万人）の立体ビル群を再現しています。'
+  },
+  {
+    id: 'tokyo-skytree',
+    nameEn: 'Tokyo Skytree',
+    nameJa: '東京スカイツリー & 墨田圏',
+    cityEn: 'Sumida, Tokyo',
+    cityJa: '東京・墨田区押上',
+    countryEn: 'Japan',
+    countryJa: '日本',
+    region: 'Asia',
+    lat: 35.7101,
+    lon: 139.8107,
+    heightMeters: 634,
+    urbanPopM: 37.4,
+    archType: 'skytree',
+    archLabel: 'Helical Truss Spire',
+    color: '#7dd3fc',
+    secondaryColor: '#e0f2fe',
+    skylineDensity: 22,
+    descriptionEn:
+      'Standing 634 meters tall, its neo-futuristic outer steel lattice morphs smoothly from an equilateral triangular tripod base into a cylindrical shaft around a central seismic core column.',
+    descriptionJa:
+      '高さ634mの世界有数の自立式電波塔。五重塔の心柱制振構造に着想を得た中央コアと、足元の正三角形から円形断面へと変化する外周スパイラルトラス、2つの展望デッキを立体造形しています。'
+  },
+  {
+    id: 'eiffel-tower',
+    nameEn: 'Eiffel Tower',
+    nameJa: 'エッフェル塔 & パリ都市圏',
+    cityEn: 'Paris',
+    cityJa: 'パリ',
+    countryEn: 'France',
+    countryJa: 'フランス',
+    region: 'Europe',
+    lat: 48.8584,
+    lon: 2.2945,
+    heightMeters: 330,
+    urbanPopM: 11.2,
+    archType: 'eiffel',
+    archLabel: 'Wrought-Iron Lattice',
+    color: '#fbbf24',
+    secondaryColor: '#d97706',
+    skylineDensity: 18,
+    descriptionEn:
+      'Built for the 1889 Exposition Universelle, this 330-meter wrought-iron lattice monument features four monumental base arches, inward-curving corner piers, and three observation levels.',
+    descriptionJa:
+      '1889年パリ万博の象徴として建設された高さ330mの錬鉄製格子塔。脚元の4連装飾アーチ、内側に湾曲しながら収束する4本脚トラス、3層の展望プラットフォームを再現しています。'
+  },
+  {
+    id: 'statue-of-liberty',
+    nameEn: 'Statue of Liberty & NYC Skyline',
+    nameJa: '自由の女神 & マンハッタン摩天楼',
+    cityEn: 'New York City',
+    cityJa: 'ニューヨーク',
+    countryEn: 'United States',
+    countryJa: 'アメリカ',
+    region: 'Americas',
+    lat: 40.6892,
+    lon: -74.0445,
+    heightMeters: 93,
+    urbanPopM: 18.9,
+    archType: 'statue_liberty',
+    archLabel: 'Star Fort & Monument',
+    color: '#2dd4bf',
+    secondaryColor: '#fde047',
+    skylineDensity: 30,
+    descriptionEn:
+      'Set atop the 11-pointed Star Fort of Fort Wood and a stepped granite pedestal, the copper-patina figure raises a golden flaming torch beside the supertall skyline of Lower Manhattan.',
+    descriptionJa:
+      'リバティ島の11角形星形要塞（フォート・ウッド）と花崗岩の段状台座の上に立つ緑青色の女神像、7つの突起を持つ冠、右手に掲げる黄金のトーチ、および背後のマンハッタン摩天楼を立体配置しています。'
+  },
+  {
+    id: 'giza-pyramids',
+    nameEn: 'Great Pyramids of Giza & Sphinx',
+    nameJa: 'ギザの三大ピラミッド & スフィンクス',
+    cityEn: 'Giza / Greater Cairo',
+    cityJa: 'ギザ / カイロ圏',
+    countryEn: 'Egypt',
+    countryJa: 'エジプト',
+    region: 'MEA_Oceania',
+    lat: 29.9792,
+    lon: 31.1342,
+    heightMeters: 139,
+    urbanPopM: 21.8,
+    archType: 'pyramids',
+    archLabel: 'Stepped Limestone Trio',
+    color: '#eab308',
+    secondaryColor: '#fef08a',
+    skylineDensity: 12,
+    descriptionEn:
+      'The Fourth Dynasty necropolis featuring the stepped limestone courses of Khufu, Khafre (retaining its smooth apex casing stones), and Menkaure, guarded by the Great Sphinx.',
+    descriptionJa:
+      'クフ王・カフラー王（頂部に残る滑らかな化粧石も再現）・メンカウラー王の三大ピラミッドの階段状石灰岩構造と、3基の王妃ピラミッド、前方の大スフィンクス像を忠実に配置しています。'
+  },
+  {
+    id: 'sydney-opera',
+    nameEn: 'Sydney Opera House',
+    nameJa: 'シドニー・オペラハウス',
+    cityEn: 'Sydney',
+    cityJa: 'シドニー',
+    countryEn: 'Australia',
+    countryJa: 'オーストラリア',
+    region: 'MEA_Oceania',
+    lat: -33.8568,
+    lon: 151.2153,
+    heightMeters: 65,
+    urbanPopM: 5.1,
+    archType: 'opera_house',
+    archLabel: 'Vaulted Shell Sails',
+    color: '#f8fafc',
+    secondaryColor: '#38bdf8',
+    skylineDensity: 15,
+    descriptionEn:
+      'Jørn Utzon’s architectural masterpiece on Bennelong Point, composed of interlocking precast concrete spherical shell vaults and bronzed glass curtain walls overlooking Sydney Harbour.',
+    descriptionJa:
+      'シドニー湾のベネロング・ポイント基壇上に張り出す、大小7枚の白い球面シェル屋根群と開口部のガラスカーテンウォール、シドニーCBDの高層街区を立体表現しています。'
+  },
+  {
+    id: 'big-ben-london',
+    nameEn: 'Big Ben, Westminster & London Eye',
+    nameJa: 'ビッグ・ベン & ロンドン・アイ',
+    cityEn: 'London',
+    cityJa: 'ロンドン',
+    countryEn: 'United Kingdom',
+    countryJa: 'イギリス',
+    region: 'Europe',
+    lat: 51.5007,
+    lon: -0.1246,
+    heightMeters: 96,
+    urbanPopM: 9.6,
+    archType: 'big_ben',
+    archLabel: 'Gothic Tower & Cantilever Wheel',
+    color: '#fbbf24',
+    secondaryColor: '#38bdf8',
+    skylineDensity: 20,
+    descriptionEn:
+      'The Neo-Gothic Elizabeth Tower featuring four illuminated clock dials and cast-iron spire alongside the Palace of Westminster and the rotating 20-capsule London Eye observation wheel.',
+    descriptionJa:
+      '4面の光る時計文字盤と控え壁を持つエリザベス・タワー（ビッグ・ベン）、隣接するウェストミンスター宮殿、およびAフレーム支柱と20個の乗客カプセルを備えて回転するロンドン・アイを造形しています。'
+  },
+  {
+    id: 'burj-khalifa',
+    nameEn: 'Burj Khalifa & Downtown Dubai',
+    nameJa: 'ブルジュ・ハリファ & ドバイ新都心',
+    cityEn: 'Dubai',
+    cityJa: 'ドバイ',
+    countryEn: 'United Arab Emirates',
+    countryJa: 'アラブ首長国連邦',
+    region: 'MEA_Oceania',
+    lat: 25.1972,
+    lon: 55.2744,
+    heightMeters: 828,
+    urbanPopM: 3.6,
+    archType: 'burj_khalifa',
+    archLabel: 'Y-Plan Spiraling Supertall',
+    color: '#38bdf8',
+    secondaryColor: '#e2e8f0',
+    skylineDensity: 24,
+    descriptionEn:
+      'The world’s tallest structure at 828 meters, engineered with a buttressed Y-shaped tripartite floor plan and 18 spiraling setbacks ascending to a telescopic needle spire.',
+    descriptionJa:
+      '世界最高峰828mの超高層建築。Y字型3翼断面をベースに、18段階のスパイラル・セットバックで細くなりながら天へ伸びるニードル構造を立体再現しています。'
+  },
+  {
+    id: 'roman-colosseum',
+    nameEn: 'Colosseum (Flavian Amphitheatre)',
+    nameJa: 'コロッセオ (フラウィウス円形闘技場)',
+    cityEn: 'Rome',
+    cityJa: 'ローマ',
+    countryEn: 'Italy',
+    countryJa: 'イタリア',
+    region: 'Europe',
+    lat: 41.8902,
+    lon: 12.4922,
+    heightMeters: 48,
+    urbanPopM: 4.3,
+    archType: 'colosseum',
+    archLabel: 'Travertine Tiered Arcade',
+    color: '#fb923c',
+    secondaryColor: '#fed7aa',
+    skylineDensity: 12,
+    descriptionEn:
+      'Ancient Rome’s elliptical amphitheatre rendered with its preserved four-story northern travertine outer arcade, exposed inner cavea seating bowl, and central arena floor.',
+    descriptionJa:
+      '古代ローマ帝国の楕円形闘技場。北側に残る4層のトラバーチン外周アーチ壁と、南側で露出する内部の階段状観客席（カウェア）および中央アリーナの非対称な遺構形状を3D構築しています。'
+  },
+  {
+    id: 'taj-mahal',
+    nameEn: 'Taj Mahal',
+    nameJa: 'タージ・マハル',
+    cityEn: 'Agra',
+    cityJa: 'アグラ',
+    countryEn: 'India',
+    countryJa: 'インド',
+    region: 'Asia',
+    lat: 27.1751,
+    lon: 78.0421,
+    heightMeters: 73,
+    urbanPopM: 2.4,
+    archType: 'taj_mahal',
+    archLabel: 'Mughal Onion Dome & Minarets',
+    color: '#f8fafc',
+    secondaryColor: '#fde047',
+    skylineDensity: 10,
+    descriptionEn:
+      'Crown of Mughal architecture crafted with a chamfered octagonal marble mausoleum, grand pishtaq archways, a bulbous lotus dome, four roof chhatris, and four three-balcony minarets.',
+    descriptionJa:
+      '白大理石の基壇上に立つ八角形霊廟、4面のイーワーン（大アーチ門）、玉ねぎ型の蓮華ドーム、屋根四隅の小ドーム（チャトリ）、および3段バルコニー付きの4本のミナレットを精密に立体化しています。'
+  },
+  {
+    id: 'golden-gate-bridge',
+    nameEn: 'Golden Gate Bridge',
+    nameJa: 'ゴールデン・ゲート・ブリッジ',
+    cityEn: 'San Francisco',
+    cityJa: 'サンフランシスコ',
+    countryEn: 'United States',
+    countryJa: 'アメリカ',
+    region: 'Americas',
+    lat: 37.8199,
+    lon: -122.4783,
+    heightMeters: 227,
+    urbanPopM: 4.7,
+    archType: 'golden_gate',
+    archLabel: 'Art Deco Suspension Span',
+    color: '#f97316',
+    secondaryColor: '#fdba74',
+    skylineDensity: 16,
+    descriptionEn:
+      'Spanning the Golden Gate strait with twin 227-meter Art Deco portal towers in International Orange, parabolic main suspension cables, and vertical suspender ropes.',
+    descriptionJa:
+      'ゴールデンゲート海峡を跨ぐインターナショナル・オレンジ色のアールデコ調多段主塔2基、放物線を描くメインケーブル、および橋桁を吊る垂直ハンガーロープ群を3D構造体として再現しています。'
+  },
+  {
+    id: 'christ-the-redeemer',
+    nameEn: 'Christ the Redeemer',
+    nameJa: 'コルコバードのキリスト像',
+    cityEn: 'Rio de Janeiro',
+    cityJa: 'リオデジャネイロ',
+    countryEn: 'Brazil',
+    countryJa: 'ブラジル',
+    region: 'Americas',
+    lat: -22.9519,
+    lon: -43.2105,
+    heightMeters: 710,
+    urbanPopM: 13.7,
+    archType: 'christ_redeemer',
+    archLabel: 'Corcovado Peak Monument',
+    color: '#e2e8f0',
+    secondaryColor: '#34d399',
+    skylineDensity: 16,
+    descriptionEn:
+      'Perched atop the steep 710-meter granite peak of Mount Corcovado, the Art Deco soapstone statue spreads its arms wide above the Guanabara Bay and Rio metropolis.',
+    descriptionJa:
+      '標高710mの急峻なコルコバード山頂の岩峰ジオメトリと八角形台座の上に、両腕を大きく広げてリオデジャネイロの街を見守るキリスト像を立体造形しています。'
+  },
+  {
+    id: 'great-wall-badaling',
+    nameEn: 'Great Wall of China (Badaling)',
+    nameJa: '万里の長城 (八達嶺〜北京圏)',
+    cityEn: 'Beijing',
+    cityJa: '北京',
+    countryEn: 'China',
+    countryJa: '中国',
+    region: 'Asia',
+    lat: 40.3598,
+    lon: 116.0200,
+    heightMeters: 1015,
+    urbanPopM: 21.3,
+    archType: 'great_wall',
+    archLabel: 'Crenellated Ridge Rampart',
+    color: '#facc15',
+    secondaryColor: '#a16207',
+    skylineDensity: 20,
+    descriptionEn:
+      'Winding across rugged mountain ridges north of Beijing with crenellated stone battlements and four two-story fortified watchtowers.',
+    descriptionJa:
+      '険しい山岳稜線に沿ってうねるように連なる女牆（凹凸の胸壁）付き石造城壁と、反り屋根を備えた4基の二層敵楼（監視塔）を立体構築しています。'
+  },
+  {
+    id: 'marina-bay-sands',
+    nameEn: 'Marina Bay Sands & ArtScience',
+    nameJa: 'マリーナ・ベイ・サンズ & シンガポール',
+    cityEn: 'Singapore',
+    cityJa: 'シンガポール',
+    countryEn: 'Singapore',
+    countryJa: 'シンガポール',
+    region: 'Asia',
+    lat: 1.2834,
+    lon: 103.8607,
+    heightMeters: 207,
+    urbanPopM: 6.0,
+    archType: 'marina_bay',
+    archLabel: 'Cantilever SkyPark & Lotus',
+    color: '#22d3ee',
+    secondaryColor: '#f8fafc',
+    skylineDensity: 24,
+    descriptionEn:
+      'Three inward-curving double-leg hotel towers crowned by the 340-meter cantilevered SkyPark infinity pool hull and accompanied by the lotus-inspired ArtScience Museum.',
+    descriptionJa:
+      '内側に傾斜しながら合流するダブルレッグ構造のホテルタワー3棟、頂上を連結する船型スカイパーク＆インフィニティプール、および手前の蓮型アートサイエンス・ミュージアムを再現しています。'
+  },
+  {
+    id: 'sagrada-familia',
+    nameEn: 'Basílica de la Sagrada Família',
+    nameJa: 'サグラダ・ファミリア & バルセロナ',
+    cityEn: 'Barcelona',
+    cityJa: 'バルセロナ',
+    countryEn: 'Spain',
+    countryJa: 'スペイン',
+    region: 'Europe',
+    lat: 41.4036,
+    lon: 2.1744,
+    heightMeters: 172,
+    urbanPopM: 5.7,
+    archType: 'sagrada_familia',
+    archLabel: 'Hyperboloid Spire Basilica',
+    color: '#fbbf24',
+    secondaryColor: '#fb7185',
+    skylineDensity: 16,
+    descriptionEn:
+      'Antoni Gaudí’s monumental basilica featuring 14 organic parabolic bell and Evangelist spires, the Star-topped Virgin Mary tower, and the 172.5-meter central Tower of Jesus Christ.',
+    descriptionJa:
+      'ガウディ設計の十字型聖堂と有機的な紡錘形尖塔群（生誕・受難ファサードの8塔、福音書記者の4塔、北側のマリアの塔、および中央にそびえる高さ172.5mのイエスの塔）を精密に造形しています。'
+  }
+];

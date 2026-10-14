@@ -1,0 +1,24 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# IDE and Editor directories
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node / Build artifacts (if bundler is added in the future)
+node_modules/
+dist/
+build/
+.cache/
+*.log
+npm-debug.log*
+
+# Local environment files
+.env
+.env.local

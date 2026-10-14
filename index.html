@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>TerraVista 3D — Interactive Earth, Moon, Landmarks &amp; Open Urban Data</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <!-- Three.js Latest Stable via Official CDN ES Module Importmap (MIT License) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@latest/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- 3D WebGL Canvas Container -->
+  <div id="canvas-container" aria-label="Interactive 3D Earth &amp; Moon Globe"></div>
+
+  <!-- 3D Floating HTML Markers Overlay -->
+  <div id="labels-container" class="labels-container"></div>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loader-card">
+      <div class="loader-orbit">
+        <div class="loader-planet"></div>
+        <div class="loader-satellite"></div>
+      </div>
+      <h1 class="loader-title">TerraVista <span>3D</span></h1>
+      <p id="loader-status" class="loader-status">Synthesizing 3D Earth, Lunar Orbit &amp; architectural landmarks...</p>
+      <div class="loader-bar-wrap">
+        <div id="loader-bar" class="loader-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimal Floating Restore Button (Visible ONLY when Full HUD is hidden in Showcase/Wallpaper Mode) -->
+  <button id="btn-restore-hud" class="restore-hud-btn hidden" title="Restore HUD (Shortcut: H)">
+    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+    <span id="txt-restore-hud">Show HUD</span>
+  </button>
+
+  <!-- Top Navigation & Mode Bar -->
+  <header id="top-bar" class="top-bar">
+    <div class="left-header-Cluster">
+      <!-- Toggle Left Explorer HUD Button (Left HUD is hidden by default) -->
+      <button id="btn-toggle-drawer" class="action-chip drawer-trigger-btn" title="Open Explorer &amp; Options HUD">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="3" />
+          <line x1="9" y1="3" x2="9" y2="21" />
+          <path d="M13 9h5" />
+          <path d="M13 15h5" />
+        </svg>
+        <span id="txt-explore-btn">Explore &amp; Options</span>
+      </button>
+
+      <div class="brand-group">
+        <div class="brand-badge">3D GLOBE</div>
+        <div class="brand-text">
+          <h1 class="brand-title">TerraVista <span>3D</span></h1>
+          <p id="txt-brand-subtitle" class="brand-subtitle">World Landmarks &amp; Open Urban Data</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual Mode Switcher (Custom Original SVG Icons) -->
+    <nav class="mode-switcher" aria-label="Visual Modes">
+      <button class="mode-btn active" data-mode="satellite" title="Realistic Satellite Earth, Moon &amp; 3D Landmarks">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <ellipse cx="12" cy="12" rx="4.2" ry="9" />
+          <path d="M3.6 9h16.8" />
+          <path d="M3.6 15h16.8" />
+        </svg>
+        <span id="txt-mode-satellite" class="mode-label">Satellite &amp; Landmarks</span>
+      </button>
+      <button class="mode-btn" data-mode="urban" title="Open Data 3D Urban Population Pillars &amp; Arcs">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 20v-8l3-2 3 2v8" />
+          <path d="M14 20V6l3-2 3 2v14" />
+          <path d="M9 20v-5l3-2 3 2v5" />
+          <line x1="2" y1="20" x2="22" y2="20" />
+        </svg>
+        <span id="txt-mode-urban" class="mode-label">Urban Open Data</span>
+      </button>
+      <button class="mode-btn" data-mode="holo" title="Cyber Hologram Vector Coastlines &amp; Neon Monuments">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 21 7 21 17 12 22 3 17 3 7 12 2" />
+          <polyline points="3 7 12 12 21 7" />
+          <line x1="12" y1="22" x2="12" y2="12" />
+        </svg>
+        <span id="txt-mode-holo" class="mode-label">Cyber Holo</span>
+      </button>
+    </nav>
+
+    <!-- Quick Camera, Moon View, Language & Wallpaper Showcase Bar -->
+    <div class="top-actions">
+      <div class="telemetry-pill">
+        <span class="telemetry-dot"></span>
+        <span id="solar-time-display">UTC 12:00</span>
+      </div>
+
+      <!-- Fly to 3D Moon / Earthrise View Button (Custom Original Crescent Moon & Crater SVG) -->
+      <button id="btn-moon-view" class="action-chip" title="Fly to the Moon (Earthrise View)">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
+          <circle cx="9.5" cy="14.5" r="1.2" />
+          <circle cx="13.5" cy="16.8" r="0.8" />
+        </svg>
+        <span id="txt-moon-view">Moon</span>
+      </button>
+
+      <!-- Reset Camera to Full Globe Overview -->
+      <button id="btn-reset-camera" class="action-chip" title="Reset Camera to Full Globe View">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="8" />
+          <circle cx="12" cy="12" r="2.5" />
+          <line x1="12" y1="2" x2="12" y2="4" />
+          <line x1="12" y1="20" x2="12" y2="22" />
+          <line x1="2" y1="12" x2="4" y2="12" />
+          <line x1="20" y1="12" x2="22" y2="12" />
+        </svg>
+        <span id="txt-reset-view">Overview</span>
+      </button>
+
+      <!-- Quick Language Switcher (EN / JA) -->
+      <button id="btn-lang-toggle" class="action-chip" title="Switch Language (English / 日本語)">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 5h7" />
+          <path d="M7.5 3v2" />
+          <path d="M5 5c0 4 2.5 7 6 8.5" />
+          <path d="M9.5 5c-.5 3.5-2.5 6.5-6 8.5" />
+          <path d="M13 19l4-9 4 9" />
+          <path d="M14.4 16h5.2" />
+        </svg>
+        <span id="txt-lang-badge">EN</span>
+      </button>
+
+      <!-- Full HUD Hide / Wallpaper Showcase Mode Button -->
+      <button id="btn-zen-mode" class="action-chip zen-trigger-btn" title="Hide All HUD for Showcase / Wallpaper Mode (Shortcut: H)">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-6.5 0-10-8-10-8a18.45 18.45 0 0 1 5.06-5.94" />
+          <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c6.5 0 10 8 10 8a18.5 18.5 0 0 1-2.16 3.19" />
+          <line x1="2" y1="2" x2="22" y2="22" />
+        </svg>
+        <span id="txt-zen-btn">Showcase</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Left / Mobile Bottom-Sheet Control Panel (DEFAULT HIDDEN via .collapsed) -->
+  <aside id="control-drawer" class="control-drawer collapsed">
+    <!-- Panel Top Bar (Desktop Collapse Button + Mobile Grab Handle) -->
+    <div class="drawer-top-header">
+      <button id="drawer-toggle-btn" class="drawer-handle" aria-label="Toggle Panel">
+        <span class="handle-bar"></span>
+        <span id="txt-drawer-handle" class="handle-label">Explorer &amp; 3D Settings</span>
+      </button>
+      <button id="btn-close-drawer" class="drawer-close-btn" title="Hide Left Panel">
+        <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Panel Tabs (Custom Original SVG Icons) -->
+    <div class="panel-tabs">
+      <button class="tab-btn active" data-tab="landmarks">
+        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L9 9h6l-3-7Z" />
+          <path d="M7 22l2-13h6l2 13" />
+          <line x1="4" y1="22" x2="20" y2="22" />
+          <line x1="8.2" y1="15" x2="15.8" y2="15" />
+        </svg>
+        <span id="txt-tab-landmarks">Landmarks</span>
+        <span id="badge-landmarks" class="tab-badge">15</span>
+      </button>
+      <button class="tab-btn" data-tab="cities">
+        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="10" width="5" height="11" />
+          <rect x="9.5" y="4" width="5" height="17" />
+          <rect x="16" y="8" width="5" height="13" />
+        </svg>
+        <span id="txt-tab-cities">Urban Data</span>
+        <span id="badge-cities" class="tab-badge">45</span>
+      </button>
+      <button class="tab-btn" data-tab="controls">
+        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+          <circle cx="9" cy="6" r="2.2" fill="#030712" />
+          <circle cx="15" cy="12" r="2.2" fill="#030712" />
+          <circle cx="10" cy="18" r="2.2" fill="#030712" />
+        </svg>
+        <span id="txt-tab-controls">Options</span>
+      </button>
+    </div>
+
+    <!-- Search & Filter Box (Shown on Landmarks & Cities Tabs) -->
+    <div id="search-box-wrap" class="search-box-wrap">
+      <div class="search-input-container">
+        <svg class="search-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7" />
+          <line x1="20" y1="20" x2="16.2" y2="16.2" />
+        </svg>
+        <input
+          type="search"
+          id="search-input"
+          class="search-input"
+          placeholder="Search landmarks, cities, countries..."
+          autocomplete="off"
+        />
+      </div>
+      <div id="region-filters" class="region-filters">
+        <button class="filter-chip active" data-region="all" id="txt-reg-all">All</button>
+        <button class="filter-chip" data-region="Asia" id="txt-reg-asia">Asia</button>
+        <button class="filter-chip" data-region="Europe" id="txt-reg-europe">Europe</button>
+        <button class="filter-chip" data-region="Americas" id="txt-reg-americas">Americas</button>
+        <button class="filter-chip" data-region="MEA_Oceania" id="txt-reg-mea">MEA &amp; Oceania</button>
+      </div>
+    </div>
+
+    <!-- Tab Content 1: 3D Landmarks List -->
+    <div id="tab-landmarks" class="tab-content active">
+      <div id="landmarks-list" class="item-list"></div>
+    </div>
+
+    <!-- Tab Content 2: Open Data Urban Areas List -->
+    <div id="tab-cities" class="tab-content">
+      <div class="opendata-note">
+        <span id="txt-opendata-note">Source: UN Urbanization Prospects &amp; Natural Earth (Public Domain)</span>
+      </div>
+      <div id="cities-list" class="item-list"></div>
+    </div>
+
+    <!-- Tab Content 3: Options, Language & 3D Visual Controls -->
+    <div id="tab-controls" class="tab-content">
+      <div class="controls-scroll">
+        <!-- Language & Display Mode Section -->
+        <div class="control-group">
+          <div class="control-header">
+            <label for="select-language" id="txt-lbl-language">Interface Language</label>
+          </div>
+          <select id="select-language" class="select-input">
+            <option value="en" selected>English (Default)</option>
+            <option value="ja">日本語 (Japanese)</option>
+          </select>
+
+          <button id="btn-options-zen" class="btn-secondary mt-8">
+            <span id="txt-btn-options-zen">Enter Full Showcase / Wallpaper Mode (Hide All HUD)</span>
+          </button>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label for="slider-solar" id="txt-lbl-solar">Solar Terminator &amp; Time</label>
+            <span id="val-solar" class="control-val">12:00 UTC</span>
+          </div>
+          <input type="range" id="slider-solar" min="0" max="24" step="0.1" value="12" />
+          <label class="checkbox-row">
+            <input type="checkbox" id="chk-solar-auto" checked />
+            <span id="txt-chk-solar-auto">Smooth automatic day-night solar cycle</span>
+          </label>
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label for="slider-landmark-scale" id="txt-lbl-scale">3D Landmark &amp; Skyline Scale</label>
+            <span id="val-landmark-scale" class="control-val">1.0x</span>
+          </div>
+          <input type="range" id="slider-landmark-scale" min="0.4" max="2.5" step="0.1" value="1.0" />
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label for="slider-bloom" id="txt-lbl-bloom">Atmospheric &amp; City Light Bloom</label>
+            <span id="val-bloom" class="control-val">0.85</span>
+          </div>
+          <input type="range" id="slider-bloom" min="0" max="2.0" step="0.05" value="0.85" />
+        </div>
+
+        <div class="control-group">
+          <div class="control-header">
+            <label for="slider-rotate" id="txt-lbl-rotate">Globe Auto-Rotation Speed</label>
+            <span id="val-rotate" class="control-val">0.3x</span>
+          </div>
+          <input type="range" id="slider-rotate" min="0" max="2.0" step="0.1" value="0.3" />
+        </div>
+
+        <div class="control-group toggles-list">
+          <p id="txt-group-layers" class="group-subtitle">3D Layer Visibility</p>
+          <label class="checkbox-row">
+            <input type="checkbox" id="chk-moon" checked />
+            <span id="txt-chk-moon">3D Moon &amp; Lunar Orbit (Phases &amp; Earthshine)</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="chk-landmarks" checked />
+            <span id="txt-chk-landmarks">3D Architectural Landmarks</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="chk-labels" checked />
+            <span id="txt-chk-labels">Floating 3D Landmark Name Tags</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="chk-skylines" checked />
+            <span id="txt-chk-skylines">3D Urban High-Rise Skylines</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="chk-pillars" />
+            <span id="txt-chk-pillars">Open Data 3D Population Pillars</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="chk-arcs" />
+            <span id="txt-chk-arcs">Global Inter-City 3D Flight &amp; Data Arcs</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="chk-coastlines" checked />
+            <span id="txt-chk-coastlines">3D Natural Earth Coastlines &amp; Borders</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="chk-clouds" checked />
+            <span id="txt-chk-clouds">Volumetric Clouds &amp; Fresnel Atmosphere</span>
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="chk-satellites" checked />
+            <span id="txt-chk-satellites">Orbital Satellites &amp; ISS Trajectories</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right / Floating Detail Inspector Card -->
+  <section id="detail-card" class="detail-card hidden" aria-live="polite">
+    <button id="btn-close-detail" class="detail-close" aria-label="Close">
+      <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+    <div class="detail-header">
+      <span id="detail-badge" class="detail-badge">3D LANDMARK</span>
+      <h2 id="detail-title" class="detail-title">Tokyo Tower &amp; Minato Skyline</h2>
+      <p id="detail-subtitle" class="detail-subtitle">Japan • Minato, Tokyo (35.66° N, 139.75° E)</p>
+    </div>
+
+    <div class="detail-metrics">
+      <div class="metric-box">
+        <span id="metric-label-1" class="metric-label">Height / Elevation</span>
+        <strong id="metric-val-1" class="metric-val">333 m</strong>
+      </div>
+      <div class="metric-box">
+        <span id="metric-label-2" class="metric-label">Metro Pop (OpenData)</span>
+        <strong id="metric-val-2" class="metric-val">37.4M</strong>
+      </div>
+      <div class="metric-box">
+        <span id="metric-label-3" class="metric-label">3D Structure</span>
+        <strong id="metric-val-3" class="metric-val">Parabolic Truss</strong>
+      </div>
+    </div>
+
+    <p id="detail-desc" class="detail-desc">
+      Landmark architectural description appears here.
+    </p>
+
+    <div class="detail-actions">
+      <button id="btn-street-orbit" class="btn-primary">
+        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          <line x1="11" y1="8" x2="11" y2="14" />
+          <line x1="8" y1="11" x2="14" y2="11" />
+        </svg>
+        <span id="txt-btn-closeup">3D Close-Up Skyline Orbit</span>
+      </button>
+      <button id="btn-globe-overview" class="btn-secondary">
+        <span id="txt-btn-pullback">Return to Full Globe Overview</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Bottom HUD Hint -->
+  <div id="hud-hint" class="hud-hint">
+    <span id="txt-hint-1">Drag / Swipe: Orbit</span>
+    <span class="dot-sep">•</span>
+    <span id="txt-hint-2">Wheel / Pinch: Zoom</span>
+    <span class="dot-sep">•</span>
+    <span id="txt-hint-3">Click Monument / Moon: 3D Close-Up</span>
+    <span class="dot-sep">•</span>
+    <span id="txt-hint-4">Press [H]: Hide All HUD</span>
+  </div>
+
+  <!-- Fallback warning if opened via file:// without a local HTTP server -->
+  <script>
+    if (window.location.protocol === 'file:') {
+      const statusEl = document.getElementById('loader-status');
+      if (statusEl) {
+        statusEl.innerHTML =
+          'Please open via a local HTTP server for ES Modules support.<br>' +
+          'Run <code>python3 -m http.server 8080</code> in terminal and open ' +
+          '<a href="http://localhost:8080" style="color:#38bdf8;">http://localhost:8080</a>';
+      }
+    }
+  </script>
+
+  <!-- Main Application Entry Point -->
+  <script type="module" src="./js/main.js?v=6"></script>
+</body>
+</html>
